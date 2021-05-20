@@ -16,7 +16,7 @@ const leadReducers = (state = initialState, action) => {
     case types.GET_LEADS_REQUEST:
       return { ...state, loading: true };
     case types.GET_LEADS_SUCCESS:
-      return { ...state, leads: payload.leads, loading: false };
+      return { ...state, leads: payload, loading: false };
     case types.GET_LEADS_FAILURE:
       return { ...state, loading: false };
 

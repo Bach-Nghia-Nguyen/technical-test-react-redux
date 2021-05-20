@@ -11,27 +11,19 @@ const getLeads = () => async (dispatch) => {
   }
 };
 
-const createLead =
-  ({ firstName, lastName, email, mobile, locationType, locationString }) =>
-  async (dispatch) => {
-    dispatch({ type: types.CREATE_LEAD_REQUEST, payload: null });
-    try {
-      const response = await api.post(`/leads`, {
-        firstName,
-        lastName,
-        email,
-        mobile,
-        locationType,
-        locationString,
-      });
-      dispatch({
-        type: types.CREATE_LEAD_SUCCESS,
-        payload: response.data.data,
-      });
-    } catch (error) {
-      dispatch({ type: types.CREATE_LEAD_FAILURE, payload: error });
-    }
-  };
+const createLead = (formData) => async (dispatch) => {
+  dispatch({ type: types.CREATE_LEAD_REQUEST, payload: null });
+  try {
+    const response = await api.post(`/leads`, formData);
+    dispatch({
+      type: types.CREATE_LEAD_SUCCESS,
+      payload: response.data.data,
+    });
+    dispatch(getLeads());
+  } catch (error) {
+    dispatch({ type: types.CREATE_LEAD_FAILURE, payload: error });
+  }
+};
 
 const giveLeadMark = (leadId, communication) => async (dispatch) => {
   dispatch({ type: types.UPDATE_LEAD_MARK_REQUEST, payload: null });
@@ -41,6 +33,7 @@ const giveLeadMark = (leadId, communication) => async (dispatch) => {
       type: types.UPDATE_LEAD_MARK_SUCCESS,
       payload: response.data.data,
     });
+    dispatch(getLeads());
   } catch (error) {
     dispatch({ type: types.UPDATE_LEAD_MARK_FAILURE, payload: error });
   }
@@ -52,6 +45,7 @@ const deleteLead = (leadId) => async (dispatch) => {
     const response = await api.delete(`/leads/${leadId}`);
 
     dispatch({ type: types.DELETE_LEAD_SUCCESS, payload: response.data.data });
+    dispatch(getLeads());
   } catch (error) {
     dispatch({ type: types.DELETE_LEAD_FAILURE, payload: error });
   }
